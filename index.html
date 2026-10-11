@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Canales digitales | Laboratorio interactivo</title>
+<style>
+:root{--navy:#14284f;--blue:#246fc1;--teal:#0aa9a6;--coral:#ff786b;--lilac:#7868c9;--ink:#20304e;--muted:#62718a;--bg:#f3f7fc;--line:#dce6f2;--white:#fff}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);font-family:Inter,"Segoe UI",Arial,sans-serif;color:var(--ink)}
+.hero{padding:38px 22px 30px;text-align:center;background:radial-gradient(circle at 8% 10%,#bdf3ec 0,transparent 25%),radial-gradient(circle at 90% 15%,#ffddd4 0,transparent 22%),linear-gradient(120deg,#fff,#eef4ff)}
+.pill{display:inline-block;border-radius:99px;padding:7px 12px;background:#ddf8f4;color:#087b77;font-weight:800;font-size:.75rem;letter-spacing:.08em;text-transform:uppercase}
+h1{max-width:1000px;margin:15px auto 10px;color:var(--navy);font-size:clamp(2rem,4.5vw,3.5rem);line-height:1.03}
+.hero p{max-width:850px;margin:auto;color:var(--muted);line-height:1.65;font-size:1.05rem}
+main{max-width:1450px;margin:auto;padding:22px}
+nav{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+nav button{background:#fff;color:var(--navy);border:1px solid var(--line);padding:11px 15px;border-radius:12px;font-weight:800}
+nav button.active{background:var(--navy);color:white}
+.view{display:none}.view.active{display:block}
+.panel{background:white;border:1px solid #e2eaf4;border-radius:20px;padding:22px;box-shadow:0 12px 32px #1a37620b;margin-bottom:20px}
+h2{margin:0 0 8px;color:var(--navy);font-size:1.55rem}h3{color:#205e9f}
+.lead{margin:0 0 18px;line-height:1.6;color:var(--muted)}
+.filters{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:16px}
+label{font-weight:800;font-size:.85rem;display:block;margin-bottom:6px;color:#3c4d6b}
+select,input{width:100%;padding:12px;border:1px solid #ccd9e9;border-radius:11px;font:inherit;background:#fff;color:var(--ink)}
+.tablewrap{overflow:auto;border-radius:15px;border:1px solid var(--line)}
+table{width:100%;min-width:1200px;border-collapse:separate;border-spacing:0;background:white}
+th{background:var(--blue);color:#fff;padding:14px;text-align:left;font-size:.86rem;line-height:1.35;position:sticky;top:0}
+td{padding:13px;vertical-align:top;border-bottom:1px solid #e4edf6;font-size:.88rem;line-height:1.48}
+tbody tr:nth-child(odd){background:#f4f9ff}tbody tr:nth-child(even){background:#e9f9f7}tbody tr:hover{background:#fff2e9}
+.channel{min-width:180px;display:flex;align-items:center;gap:10px}.ico{width:43px;height:43px;display:grid;place-items:center;border-radius:13px;background:#fff;font-size:1.5rem;box-shadow:0 3px 10px #1b345412;flex-shrink:0}.channel strong{color:var(--navy)}
+.tag{display:inline-block;border-radius:99px;background:#e7eaff;color:#474d9a;padding:4px 8px;font-size:.75rem;font-weight:800;margin:2px 3px 3px 0}
+.btn{border:0;border-radius:11px;padding:11px 15px;font:inherit;font-weight:800;cursor:pointer;transition:.15s}
+.btn:hover{transform:translateY(-1px);filter:brightness(.98)}.primary{background:var(--navy);color:white}.teal{background:#dff8f4;color:#087b77}.coral{background:#ffebe5;color:#a34432}.small{font-size:.8rem;padding:8px 10px;background:#fff;color:#1765a6;border:1px solid #cbdff2;margin-top:7px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:13px}
+.card{background:#fbfdff;border:1px solid var(--line);border-radius:15px;padding:17px}.card h3{margin:0 0 7px;font-size:1.02rem}.card p{line-height:1.5;margin:0 0 12px;color:#4b5b74}
+.reco{display:grid;grid-template-columns:1fr 1fr;gap:18px}.reco-box{background:#f1f8ff;border-radius:16px;padding:18px}.result{padding:18px;border-radius:16px;background:linear-gradient(120deg,#e2faf5,#eef0ff);min-height:150px}
+.result h3{margin-top:0}.result strong{color:#087b77}
+.quizbox{background:#f4f8ff;border-radius:16px;padding:20px}.options{display:grid;gap:9px;margin-top:14px}.options button{text-align:left;background:white;border:1px solid #d4e1f0;color:var(--ink);font-weight:650}.options button.correct{background:#e2f8e8;border-color:#64b67d}.options button.wrong{background:#fff0ee;border-color:#e99488}.feedback{min-height:48px;font-weight:750;line-height:1.5;padding-top:10px}.score{font-weight:900;color:#087b77}
+.conclusions{counter-reset:item;display:grid;gap:10px}.conclusion{padding:13px 14px 13px 48px;border-radius:12px;background:#f4f9ff;position:relative;line-height:1.55}.conclusion:before{counter-increment:item;content:counter(item);position:absolute;left:13px;top:12px;width:25px;height:25px;border-radius:8px;background:#dff8f4;color:#087b77;display:grid;place-items:center;font-weight:900}
+footer{text-align:center;color:var(--muted);padding:22px;font-size:.85rem}
+dialog{width:min(760px,calc(100% - 24px));max-height:90vh;overflow:auto;border:0;border-radius:20px;padding:0;box-shadow:0 24px 90px #0d1c3b55}dialog::backdrop{background:#112345a8;backdrop-filter:blur(3px)}
+.modalhead{display:flex;align-items:center;gap:14px;padding:20px 23px;background:linear-gradient(120deg,#ddf8f4,#e9efff)}.modalhead h2{margin:5px 0 0}.modalbody{padding:20px 24px;line-height:1.6}.modalbody h3{margin:16px 0 4px}.modalbody p{margin:0;color:#43536c}.modalfoot{display:flex;justify-content:flex-end;padding:0 24px 22px}
+@media(max-width:760px){main{padding:12px}.panel{padding:16px}.reco{grid-template-columns:1fr}.hero{padding:28px 16px}}
+@media print{nav,.filters,.btn,.small{display:none!important}.view{display:block!important}.panel{break-inside:avoid;box-shadow:none}body{background:white}}
+</style>
+</head>
+<body>
+<header class="hero">
+ <span class="pill">Explora · Compara · Decide</span>
+ <h1>Laboratorio de canales digitales</h1>
+ <p>Conoce sus características, compara sus posibilidades y descubre qué canal puede responder mejor a diferentes necesidades de comunicación.</p>
+</header>
+<main>
+<nav aria-label="Secciones">
+ <button class="active" data-view="comparar">📊 Cuadro relacional</button>
+ <button data-view="selector">🧭 Selector inteligente</button>
+ <button data-view="reto">🎯 Reto de decisiones</button>
+ <button data-view="conclusiones">💡 Conclusiones</button>
+</nav>
+<section class="view active" id="comparar">
+ <div class="panel">
+  <h2>📚 Cuadro comparativo ampliado</h2>
+  <p class="lead">Incluye los canales solicitados en las instrucciones del PAI y otros complementarios. Filtra por tipo de comunicación o ámbito de aplicación; abre cada ficha para ver un ejemplo y una recomendación.</p>
+  <div class="filters">
+   <div><label for="search">Buscar canal o característica</label><input id="search" placeholder="Ej. educativo, asincrónico, reuniones…"></div>
+   <div><label for="syncFilter">Tipo de comunicación</label><select id="syncFilter"><option value="">Todos</option><option>Sincrónica</option><option>Asincrónica</option><option>Ambas</option></select></div>
+   <div><label for="areaFilter">Ámbito de aplicación</label><select id="areaFilter"><option value="">Todos</option><option>Educativo</option><option>Empresarial</option><option>Comercial</option><option>Institucional</option><option>Personal y comunitario</option></select></div>
+  </div>
+  <div class="tablewrap"><table><thead><tr><th>Canal digital</th><th>Definición y función</th><th>Comunicación</th><th>Interacción</th><th>Ventajas</th><th>Limitaciones</th><th>Herramienta / ejemplo práctico</th><th>Ámbito</th></tr></thead><tbody id="tbody"></tbody></table></div>
+ </div>
+</section>
+<section class="view" id="selector">
+ <div class="panel">
+  <h2>🧭 Selector inteligente: ¿qué canal me conviene?</h2>
+  <p class="lead">Responde las preguntas según tu situación y consulta las recomendaciones. La elección depende del objetivo, la audiencia, los recursos disponibles y el tipo de interacción que necesitas.</p>
+  <div class="reco">
+   <div class="reco-box">
+    <div style="margin-bottom:15px"><label for="goal">1. ¿Qué quieres lograr?</label><select id="goal"><option value="informar">Informar o publicar contenido estable</option><option value="dialogar">Conversar o resolver dudas en directo</option><option value="ensenar">Enseñar o demostrar un procedimiento</option><option value="reunir">Reunir personas para una clase o reunión</option><option value="organizar">Organizar un curso con tareas y evaluaciones</option><option value="difundir">Difundir una campaña a muchas personas</option><option value="vender">Promocionar o vender productos/servicios</option></select></div>
+    <div style="margin-bottom:15px"><label for="audience">2. ¿A quién te diriges?</label><select id="audience"><option value="estudiantes">Estudiantes o comunidad educativa</option><option value="equipo">Equipo de trabajo o institución</option><option value="clientes">Clientes o público comprador</option><option value="general">Público general</option></select></div>
+    <div><label for="timing">3. ¿Cómo necesita comunicarse el público?</label><select id="timing"><option value="asincrona">A su propio ritmo (asincrónica)</option><option value="sincrona">En el mismo momento (sincrónica)</option><option value="ambas">Una combinación de ambas</option></select></div>
+    <button class="btn primary" id="recommend" style="margin-top:17px">✨ Recomendar canales</button>
+   </div>
+   <div class="result" id="result" aria-live="polite"><h3>Tu recomendación aparecerá aquí</h3><p>Elige las opciones y pulsa «Recomendar canales».</p></div>
+  </div>
+ </div>
+</section>
+<section class="view" id="reto">
+ <div class="panel">
+  <h2>🎯 Reto: elige el canal más adecuado</h2><p class="lead">Resuelve situaciones reales. Recibirás retroalimentación inmediata y un puntaje.</p>
+  <div class="quizbox"><div class="score" id="score">Puntaje: 0 / 0</div><h3 id="question"></h3><div class="options" id="options"></div><div class="feedback" id="feedback" aria-live="polite"></div><button class="btn teal" id="next">Siguiente situación →</button></div>
+ </div>
+</section>
+<section class="view" id="conclusiones">
+ <div class="panel">
+  <h2>💡 Conclusiones</h2>
+  <p class="lead">Los canales digitales ofrecen distintas posibilidades de comunicación. Su eficacia depende de la relación entre el propósito, la audiencia, la interacción y el contexto de uso.</p>
+  <div class="conclusions">
+   <div class="conclusion">La selección de un canal digital debe partir del objetivo de comunicación, las características de la audiencia y los recursos disponibles, no solo de la popularidad de la herramienta.</div>
+   <div class="conclusion">Los canales sincrónicos facilitan la respuesta inmediata, mientras que los asincrónicos permiten participar en distintos momentos; combinarlos puede favorecer la flexibilidad.</div>
+   <div class="conclusion">En educación, las plataformas LMS organizan recursos, actividades y evaluaciones, mientras que las videoconferencias favorecen el intercambio en tiempo real. Sus funciones son complementarias.</div>
+   <div class="conclusion">La interacción y el alcance no garantizan por sí solos una comunicación eficaz: también importan la accesibilidad, la claridad del mensaje, la privacidad y la retroalimentación.</div>
+   <div class="conclusion">La competencia digital implica elegir, utilizar y evaluar críticamente las herramientas, respetando la seguridad, la inclusión y el uso responsable de la información.</div>
+  </div>
+  
+ </div>
+</section>
+<footer>Canales digitales de comunicación · Explora y compara sus características</footer>
+</main>
+<dialog id="modal"><div class="modalhead"><span class="ico" id="mi">🌐</span><div><span class="pill">Ficha del canal</span><h2 id="mt"></h2></div></div><div class="modalbody" id="mb"></div><div class="modalfoot"><button class="btn teal" id="close">Cerrar ficha</button></div></dialog>
+<script>
+const data=[
+{id:"web",name:"Páginas web",icon:"🌐",def:"Espacio digital propio que organiza información, servicios y recursos.",func:"Publicar información estable, presentar servicios y reunir recursos oficiales.",sync:"Ambas",interaction:"Media: formularios, chat, comentarios o navegación.",pros:"Control del contenido, disponibilidad continua y medición de visitas.",cons:"Necesita actualización, mantenimiento, seguridad y accesibilidad.",tools:"Sitio institucional o página de un proyecto.",example:"Una institución publica sus servicios, horarios y noticias.",areas:["Educativo","Empresarial","Comercial","Institucional"],goal:["informar","difundir"]},
+{id:"blog",name:"Blogs",icon:"✍️",def:"Sitio o sección que publica entradas ordenadas por fecha o tema.",func:"Explicar temas, compartir experiencias, publicar noticias o recursos.",sync:"Asincrónica",interaction:"Media: comentarios y enlaces, si están habilitados.",pros:"Permite profundizar, organizar temas y actualizar contenidos.",cons:"Requiere constancia editorial y revisión de información.",tools:"WordPress, Blogger u otro gestor de contenidos.",example:"Una docente publica artículos y experiencias de ciencia.",areas:["Educativo","Empresarial","Institucional","Personal y comunitario"],goal:["informar","ensenar"]},
+{id:"email",name:"Correo electrónico",icon:"✉️",def:"Sistema para intercambiar mensajes digitales entre direcciones de correo.",func:"Enviar comunicaciones formales, boletines, documentos y avisos.",sync:"Asincrónica",interaction:"Media: respuestas, enlaces, adjuntos y formularios.",pros:"Deja registro, permite adjuntar archivos y llegar a listas de contactos.",cons:"Puede pasar inadvertido, llegar a spam o generar saturación.",tools:"Gmail, Outlook o correo institucional.",example:"Enviar una invitación formal o un boletín a familias suscritas.",areas:["Educativo","Empresarial","Comercial","Institucional"],goal:["informar","difundir"]},
+{id:"social",name:"Redes sociales",icon:"📱",def:"Plataformas donde las personas y organizaciones publican e interactúan.",func:"Difundir contenido, crear comunidades y recibir respuestas del público.",sync:"Ambas",interaction:"Alta: comentarios, reacciones, mensajes y transmisiones en vivo.",pros:"Difusión rápida, participación y contacto con comunidades.",cons:"Algoritmos cambiantes, saturación, desinformación y riesgos de privacidad.",tools:"Instagram, Facebook, TikTok, LinkedIn.",example:"Difundir una campaña ambiental con videos y publicaciones.",areas:["Educativo","Empresarial","Comercial","Institucional","Personal y comunitario"],goal:["difundir","dialogar","vender"]},
+{id:"chat",name:"Mensajería instantánea",icon:"💬",def:"Aplicaciones para intercambiar mensajes, archivos y notas de voz.",func:"Resolver consultas, coordinar tareas y mantener comunicación directa.",sync:"Ambas",interaction:"Muy alta: conversación directa y respuestas rápidas.",pros:"Cercanía, rapidez y facilidad para compartir archivos.",cons:"Saturación, interrupciones y necesidad de cuidar la privacidad.",tools:"WhatsApp, Telegram, Signal.",example:"Coordinar una actividad de grupo y compartir recordatorios.",areas:["Educativo","Empresarial","Institucional","Personal y comunitario"],goal:["dialogar","organizar"]},
+{id:"video",name:"Plataformas de video",icon:"▶️",def:"Servicios para publicar, reproducir y compartir contenido audiovisual.",func:"Demostrar procedimientos, explicar ideas e informar o entretener.",sync:"Ambas",interaction:"Media-alta: comentarios, reacciones, directos y suscripciones.",pros:"Atractivo visual, demostraciones claras y posibilidad de volver a ver.",cons:"Exige guion, producción, edición y atención a subtítulos y derechos.",tools:"YouTube, Vimeo o video alojado en plataforma educativa.",example:"Mostrar paso a paso un experimento de ciencias.",areas:["Educativo","Empresarial","Comercial","Institucional"],goal:["ensenar","informar","difundir"]},
+{id:"conference",name:"Videoconferencias",icon:"🎥",def:"Herramientas para reuniones y comunicación audiovisual en tiempo real.",func:"Impartir clases en directo, celebrar reuniones, asesorar y debatir.",sync:"Sincrónica",interaction:"Alta: voz, video, chat, encuestas y salas de grupos.",pros:"Interacción inmediata y colaboración a distancia.",cons:"Depende de conexión, horarios, accesibilidad y gestión del tiempo.",tools:"Zoom, Google Meet, Microsoft Teams.",example:"Realizar una tutoría virtual o una clase con preguntas en directo.",areas:["Educativo","Empresarial","Institucional"],goal:["reunir","dialogar"]},
+{id:"lms",name:"Plataformas virtuales de aprendizaje (LMS)",icon:"🎓",def:"Entornos que organizan cursos, recursos, tareas, evaluaciones y seguimiento.",func:"Gestionar el proceso de enseñanza-aprendizaje y centralizar evidencias.",sync:"Ambas",interaction:"Media-alta: foros, tareas, cuestionarios, calificaciones y mensajes.",pros:"Organización, seguimiento, acceso a recursos y evaluación centralizada.",cons:"Requiere diseño pedagógico, soporte técnico y acceso digital.",tools:"Moodle, Canvas, Google Classroom.",example:"Un curso organiza módulos, materiales, actividades y cuestionarios.",areas:["Educativo","Empresarial"],goal:["organizar","ensenar"]},
+{id:"app",name:"Aplicaciones móviles",icon:"📲",def:"Programas instalados en teléfonos o tabletas para realizar tareas específicas.",func:"Ofrecer servicios, contenido, comunicación o herramientas portátiles.",sync:"Ambas",interaction:"Variable: depende de sus funciones y notificaciones.",pros:"Acceso móvil, funciones personalizadas y facilidad de uso cotidiano.",cons:"Puede requerir instalación, actualizaciones, permisos y espacio.",tools:"Apps educativas, bancarias, de organización o servicio.",example:"Usar una aplicación para practicar vocabulario o consultar avisos.",areas:["Educativo","Empresarial","Comercial","Institucional","Personal y comunitario"],goal:["organizar","ensenar","dialogar"]},
+{id:"search",name:"Buscadores (SEO/SEM)",icon:"🔎",def:"Motores de búsqueda que ayudan a localizar información; SEO mejora resultados orgánicos y SEM incluye anuncios de búsqueda.",func:"Conectar consultas de usuarios con páginas, recursos o servicios relevantes.",sync:"Asincrónica",interaction:"Baja-media: búsqueda, clic y navegación posterior.",pros:"Ayuda a llegar a personas que ya buscan un tema o solución.",cons:"La visibilidad puede exigir trabajo constante o inversión publicitaria.",tools:"Google Search, Bing, herramientas SEO y anuncios de búsqueda.",example:"Encontrar una guía fiable sobre reciclaje o posicionar una página educativa.",areas:["Educativo","Empresarial","Comercial","Institucional"],goal:["informar","difundir","vender"]},
+{id:"ads",name:"Publicidad digital",icon:"📣",def:"Mensajes pagados que aparecen en plataformas, aplicaciones, sitios o buscadores.",func:"Aumentar la visibilidad de una campaña, producto, servicio o evento.",sync:"Ambas",interaction:"Medible mediante impresiones, clics, formularios o conversiones.",pros:"Segmentación y seguimiento de resultados.",cons:"Requiere presupuesto, pruebas y revisión ética de la segmentación.",tools:"Anuncios en buscadores y redes sociales.",example:"Promocionar la inscripción a una feria científica.",areas:["Empresarial","Comercial","Institucional"],goal:["difundir","vender"]},
+{id:"commerce",name:"Comercio electrónico",icon:"🛒",def:"Canales digitales para mostrar productos, gestionar pedidos y realizar compras.",func:"Facilitar la venta y la atención antes y después de la compra.",sync:"Ambas",interaction:"Alta: búsqueda, chat, carrito, compra y seguimiento.",pros:"Disponibilidad en línea, catálogo accesible y registro de pedidos.",cons:"Logística, devoluciones, seguridad y competencia.",tools:"Tiendas virtuales y marketplaces.",example:"Un emprendimiento ofrece productos mediante una tienda virtual.",areas:["Comercial","Empresarial"],goal:["vender"]},
+{id:"podcast",name:"Podcasts y audio digital",icon:"🎧",def:"Contenido sonoro publicado en episodios para escuchar en línea o descargar.",func:"Explicar temas, entrevistar, narrar y compartir conocimientos.",sync:"Asincrónica",interaction:"Baja-media: comentarios, valoraciones y respuestas a episodios.",pros:"Se escucha con flexibilidad y permite desarrollar ideas en profundidad.",cons:"Necesita guion, audio claro, edición y regularidad.",tools:"Spotify, Apple Podcasts y otras plataformas de audio.",example:"Un podcast escolar entrevista a estudiantes sobre proyectos científicos.",areas:["Educativo","Empresarial","Institucional","Personal y comunitario"],goal:["ensenar","informar"]},
+{id:"forum",name:"Foros y comunidades en línea",icon:"🗣️",def:"Espacios donde miembros publican preguntas y responden en conversaciones organizadas.",func:"Compartir soluciones, debatir y construir conocimiento colectivo.",sync:"Asincrónica",interaction:"Alta: hilos, respuestas, votaciones y colaboración.",pros:"Permite reflexión, registro de respuestas y ayuda entre pares.",cons:"Necesita moderación y puede contener información incorrecta.",tools:"Foros de Moodle, comunidades temáticas y espacios de discusión.",example:"Estudiantes argumentan en un foro antes de una sesión presencial.",areas:["Educativo","Empresarial","Personal y comunitario"],goal:["dialogar","ensenar"]},
+{id:"webinar",name:"Webinarios y eventos virtuales",icon:"🧑‍💻",def:"Sesiones en línea para charlas, talleres, demostraciones o presentaciones.",func:"Capacitar, informar y reunir participantes a distancia.",sync:"Sincrónica",interaction:"Media-alta: chat, preguntas, encuestas y participación en vivo.",pros:"Reduce desplazamientos y puede grabarse para consulta posterior.",cons:"Depende de conectividad, horario y organización técnica.",tools:"Zoom Webinars, Meet, Teams y plataformas de eventos.",example:"Taller virtual para aprender a usar una herramienta digital.",areas:["Educativo","Empresarial","Institucional"],goal:["reunir","ensenar","informar"]}
+];
+const $=id=>document.getElementById(id);
+function openDetail(d){$("mi").textContent=d.icon;$("mt").textContent=d.name;$("mb").innerHTML=`<h3>Definición y función</h3><p>${d.def} ${d.func}</p><h3>Tipo de comunicación: ${d.sync}</h3><p>La comunicación puede ser sincrónica (al mismo tiempo) o asincrónica (en momentos diferentes). Este canal se clasifica aquí como <strong>${d.sync.toLowerCase()}</strong> según su uso habitual.</p><h3>Nivel de interacción</h3><p>${d.interaction}</p><h3>Ventajas</h3><p>${d.pros}</p><h3>Limitaciones</h3><p>${d.cons}</p><h3>Herramientas representativas</h3><p>${d.tools}</p><h3>Ejemplo práctico</h3><p>${d.example}</p><h3>Ámbitos de aplicación</h3><p>${d.areas.join(" · ")}</p>`;$("modal").showModal()}
+function render(){let q=$("search").value.toLowerCase().trim(),s=$("syncFilter").value,a=$("areaFilter").value;let list=data.filter(d=>(!q||Object.values(d).join(" ").toLowerCase().includes(q))&&(!s||d.sync===s||d.sync==="Ambas"&&s==="Ambas")&&(!a||d.areas.includes(a)));$("tbody").innerHTML=list.map(d=>`<tr><td><div class="channel"><span class="ico">${d.icon}</span><div><strong>${d.name}</strong><br><button class="btn small" data-id="${d.id}">Abrir ficha ↗</button></div></div></td><td>${d.def}<br><br><strong>Función:</strong> ${d.func}</td><td><span class="tag">${d.sync}</span></td><td>${d.interaction}</td><td>${d.pros}</td><td>${d.cons}</td><td><strong>Herramientas:</strong> ${d.tools}<br><br><strong>Ejemplo:</strong> ${d.example}</td><td>${d.areas.map(x=>`<span class="tag">${x}</span>`).join("")}</td></tr>`).join("")||`<tr><td colspan="8">No se encontraron canales con esos filtros. Prueba otra búsqueda.</td></tr>`;document.querySelectorAll("[data-id]").forEach(b=>b.onclick=()=>openDetail(data.find(d=>d.id===b.dataset.id)))}
+document.querySelectorAll("nav button").forEach(b=>b.addEventListener("click",()=>{document.querySelectorAll("nav button").forEach(x=>x.classList.remove("active"));document.querySelectorAll(".view").forEach(x=>x.classList.remove("active"));b.classList.add("active");$(""+b.dataset.view).classList.add("active")}));
+["search","syncFilter","areaFilter"].forEach(id=>$(id).addEventListener(id==="search"?"input":"change",render));$("close").onclick=()=>$("modal").close();render();
+const goals={informar:["web","blog","email"],dialogar:["chat","social","forum"],ensenar:["video","lms","podcast"],reunir:["conference","webinar"],organizar:["lms","email","chat"],difundir:["social","web","ads"],vender:["commerce","social","search"]};
+$("recommend").onclick=()=>{let ids=goals[$("goal").value],aud=$("audience").value,timing=$("timing").value;let suitable=ids.map(id=>data.find(d=>d.id===id)).filter(d=>timing==="ambas"||timing==="sincrona"&&["Sincrónica","Ambas"].includes(d.sync)||timing==="asincrona"&&["Asincrónica","Ambas"].includes(d.sync));if(!suitable.length)suitable=ids.map(id=>data.find(d=>d.id===id));let audienceText={estudiantes:"comunidad educativa",equipo:"equipo de trabajo o institución",clientes:"clientes o compradores",general:"público general"}[aud];$("result").innerHTML=`<h3>✨ Recomendación personalizada</h3><p>Para <strong>${$("goal").selectedOptions[0].textContent.toLowerCase()}</strong>, dirigida a <strong>${audienceText}</strong> y con comunicación <strong>${timing==="sincrona"?"sincrónica":timing==="asincrona"?"asincrónica":"sincrónica y asincrónica"}</strong>, considera:</p>${suitable.slice(0,3).map(d=>`<p><strong>${d.icon} ${d.name}:</strong> ${d.best||d.func} ${d.sync==="Sincrónica"&&timing==="asincrona"?"(Requiere acordar un horario; considera un canal asincrónico complementario.)":""}</p>`).join("")}<p style="margin-top:12px"><em>Justificación:</em> contrasta las recomendaciones con el acceso de tu audiencia, la privacidad y los recursos disponibles antes de elegir.</p>`};
+const quiz=[
+{q:"Una docente quiere organizar materiales, tareas y calificaciones de un curso en un solo lugar. ¿Qué canal conviene?",o:["Redes sociales","Plataforma LMS","Podcast"],a:1,why:"Un LMS organiza cursos, recursos, actividades y seguimiento del aprendizaje."},
+{q:"El equipo necesita conversar cara a cara en tiempo real desde distintas ciudades. ¿Qué elegirías?",o:["Videoconferencia","Blog","Correo masivo"],a:0,why:"La videoconferencia permite interacción audiovisual sincrónica."},
+{q:"Quieres publicar una explicación que los estudiantes puedan consultar cualquier día y a cualquier hora. ¿Qué formato ayuda?",o:["Solo una reunión en directo","Blog o video grabado","Llamada telefónica"],a:1,why:"El blog y el video grabado son recursos asincrónicos que se pueden consultar después."},
+{q:"Necesitas enviar un documento formal a una persona y dejar registro del mensaje. ¿Qué canal suele ser adecuado?",o:["Correo electrónico","Transmisión en vivo","Publicidad digital"],a:0,why:"El correo permite enviar adjuntos y mantener un registro de la comunicación."},
+{q:"Quieres que los estudiantes debatan una pregunta y respondan a sus compañeros durante varios días. ¿Qué canal conviene?",o:["Foro en línea","Notificación push solamente","Videollamada sin grabación"],a:0,why:"El foro permite participación asincrónica y conserva las respuestas para la discusión."},
+{q:"Una comunidad necesita difundir una campaña y recibir reacciones del público. ¿Qué canal podría ayudar?",o:["Redes sociales","Carpeta privada sin acceso","Correo a una sola persona"],a:0,why:"Las redes sociales combinan difusión, conversación y participación."}
+];let qi=0,score=0,answered=0;
+function showQ(){let q=quiz[qi];$("question").textContent=q.q;$("feedback").textContent="";$("options").dataset.done="";$("options").innerHTML=q.o.map((o,i)=>`<button class="btn" data-answer="${i}">${String.fromCharCode(65+i)}. ${o}</button>`).join("");$("options").querySelectorAll("button").forEach(b=>b.onclick=()=>{if($("options").dataset.done)return;$("options").dataset.done="1";let n=+b.dataset.answer;answered++;if(n===q.a){score++;b.classList.add("correct");$("feedback").textContent="¡Correcto! "+q.why}else{b.classList.add("wrong");$("options").children[q.a].classList.add("correct");$("feedback").textContent="Revisa esta idea: "+q.why}$("score").textContent=`Puntaje: ${score} / ${answered}`})}
+$("next").onclick=()=>{qi=(qi+1)%quiz.length;if(qi===0){score=0;answered=0;$("score").textContent="Puntaje: 0 / 0"}showQ()};showQ();
+</script>
+</body>
+</html>
